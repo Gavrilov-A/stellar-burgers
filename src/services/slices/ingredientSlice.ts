@@ -4,12 +4,12 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 
-type IngredientListState = {
+type IngredientState = {
   ingredients: TIngredient[];
   isLoading: boolean;
 };
 
-const initialState: IngredientListState = {
+const initialState: IngredientState = {
   ingredients: [],
   isLoading: false
 };
@@ -22,12 +22,13 @@ export const fetchIngredients = createAsyncThunk<TIngredient[], void>(
   }
 );
 
-export const ingredientsSlice = createSlice({
+export const ingredientSlice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {},
   selectors: {
-    getIngredients: (state) => state
+    getIngredients: (state) => state.ingredients,
+    getIsLoading: (state) => state.isLoading
   },
   extraReducers: (builder) => {
     builder
@@ -47,6 +48,6 @@ export const ingredientsSlice = createSlice({
   }
 });
 
-export const { getIngredients } = ingredientsSlice.selectors;
+export const { getIngredients, getIsLoading } = ingredientSlice.selectors;
 
-export default ingredientsSlice.reducer;
+export default ingredientSlice;
