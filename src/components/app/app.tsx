@@ -30,7 +30,7 @@ const App = () => {
         <Route
           path='/login'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <Login />
             </ProtectedRoute>
           }
@@ -38,7 +38,7 @@ const App = () => {
         <Route
           path='/register'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <Register />
             </ProtectedRoute>
           }
@@ -46,7 +46,7 @@ const App = () => {
         <Route
           path='/forgot-password'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ForgotPassword />
             </ProtectedRoute>
           }
@@ -62,7 +62,7 @@ const App = () => {
         <Route
           path='/profile'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <Profile />
             </ProtectedRoute>
           }
@@ -70,7 +70,7 @@ const App = () => {
         <Route
           path='/profile/orders'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ProfileOrders />
             </ProtectedRoute>
           }
@@ -82,7 +82,7 @@ const App = () => {
             <Modal
               title=''
               onClose={() => {
-                handelModalClose;
+                handelModalClose();
               }}
             >
               <OrderInfo />
@@ -92,7 +92,10 @@ const App = () => {
         <Route
           path='/ingredients/:id'
           element={
-            <Modal title='Детали ингредиента' onClose={() => handelModalClose}>
+            <Modal
+              title='Детали ингредиента'
+              onClose={() => handelModalClose()}
+            >
               <IngredientDetails />
             </Modal>
           }
@@ -100,11 +103,11 @@ const App = () => {
         <Route
           path='/profile/orders/:number'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <Modal
                 title=''
                 onClose={() => {
-                  handelModalClose;
+                  handelModalClose();
                 }}
               >
                 <OrderInfo />

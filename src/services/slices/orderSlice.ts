@@ -19,53 +19,34 @@ const initialState: OrderState = {
   error: null
 };
 
-export const fetchOrders = createAsyncThunk<
-  TOrder[],
-  void,
-  { rejectValue: string }
->('orders/fetchOrders', async (_, { rejectWithValue }) => {
-  try {
-    const data = await getOrdersApi();
-    return data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+export const fetchOrders = createAsyncThunk<TOrder[], void>(
+  'orders/fetchOrders',
+  async () => {
+    const response = await getOrdersApi();
+    return response;
   }
-});
+);
 
-export const createOrder = createAsyncThunk<
-  TNewOrderResponse,
-  string[],
-  { rejectValue: string }
->('orders/createOrder', async (ingredients, { rejectWithValue }) => {
-  try {
-    const data = await orderBurgerApi(ingredients);
-    return data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+export const createOrder = createAsyncThunk<TNewOrderResponse, string[]>(
+  'orders/createOrder',
+  async (ingredients: string[]) => {
+    const response = await orderBurgerApi(ingredients);
+    return response;
   }
-});
+);
 
-export const fetchOrderByNumber = createAsyncThunk<
-  TOrder,
-  number,
-  { rejectValue: string }
->('orders/fetchOrderByNumber', async (numberOrder, { rejectWithValue }) => {
-  try {
-    const order = await getOrderByNumberApi(numberOrder);
-    return order.orders[0];
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+export const fetchOrderByNumber = createAsyncThunk<TOrder, number>(
+  'orders/fetchOrderByNumber',
+  async (numberOrder: number) => {
+    const response = await getOrderByNumberApi(numberOrder);
+    return response.orders[0];
   }
-});
+);
 
 export const orderSlice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {
-    clearOrder: (state) => {
-      state.order = null;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // --- createOrder ---
@@ -73,13 +54,18 @@ export const orderSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(createOrder.fulfilled, (state, action) => {
+      .addCase(
+        createOrder.fulfilled,
+        (state, action: PayloadAction<TNewOrderResponse>) => {
+          state.isLoading = false;
+          state.order = action.payload.order;
+          state.error = null;
+        }
+      )
+      .addCase(createOrder.rejected, (state) => {
+        state.order = null;
         state.isLoading = false;
-        state.order = action.payload.order;
-      })
-      .addCase(createOrder.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload || 'Unknown error';
+        state.error = 'Error not found';
       })
 
       // --- fetchOrders ---
@@ -87,13 +73,16 @@ export const orderSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchOrders.fulfilled, (state, action) => {
+      .addCase(
+        fetchOrders.fulfilled,
+        (state, action: PayloadAction<TOrder[]>) => {
+          state.isLoading = false;
+          state.orders = action.payload;
+        }
+      )
+      .addCase(fetchOrders.rejected, (state) => {
         state.isLoading = false;
-        state.orders = action.payload;
-      })
-      .addCase(fetchOrders.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload || 'Unknown error';
+        state.error = 'Error not found';
       })
 
       // --- fetchOrderByNumber ---
@@ -101,21 +90,19 @@ export const orderSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchOrderByNumber.fulfilled, (state, action) => {
+      .addCase(
+        fetchOrderByNumber.fulfilled,
+        (state, action: PayloadAction<TOrder>) => {
+          state.isLoading = false;
+          state.order = action.payload;
+          state.error = null;
+        }
+      )
+      .addCase(fetchOrderByNumber.rejected, (state) => {
         state.isLoading = false;
-        state.order = action.payload;
-      })
-      .addCase(fetchOrderByNumber.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload || 'Unknown error';
+        state.error = 'Error not found';
       });
-  },
-  selectors: {
-    getOrders: (state) => state.orders,
-    getOrderByNumber: (state) => state.order
   }
 });
 
-export const { clearOrder } = orderSlice.actions;
-export const { getOrders, getOrderByNumber } = orderSlice.selectors;
-export default orderSlice.reducer;
+export default orderSlice;

@@ -11,7 +11,7 @@ export const Profile: FC = () => {
   if (!user) {
     return null;
   }
-  console.log(user?.email);
+
   const [formValue, setFormValue] = useState({
     name: user.name,
     email: user.email,

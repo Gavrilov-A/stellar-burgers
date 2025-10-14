@@ -28,13 +28,31 @@ export const burgerSlice = createSlice({
     setBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
     },
-
-    clearIngredients: (state) => {
-      state.bun = null;
-      state.ingredients = [];
+    moveIngredientUp: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index > 0) {
+        [state.ingredients[index], state.ingredients[index - 1]] = [
+          state.ingredients[index - 1],
+          state.ingredients[index]
+        ];
+      }
+    },
+    moveIngredientDown: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index < state.ingredients.length - 1) {
+        [state.ingredients[index], state.ingredients[index + 1]] = [
+          state.ingredients[index + 1],
+          state.ingredients[index]
+        ];
+      }
     }
   }
 });
 
-export const { addIngredient, removeIngredient, clearIngredients, setBun } =
-  burgerSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  setBun,
+  moveIngredientUp,
+  moveIngredientDown
+} = burgerSlice.actions;

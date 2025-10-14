@@ -7,18 +7,20 @@ import { TIngredient } from '@utils-types';
 type IngredientState = {
   ingredients: TIngredient[];
   isLoading: boolean;
+  error: string | null;
 };
 
 const initialState: IngredientState = {
   ingredients: [],
-  isLoading: false
+  isLoading: false,
+  error: null
 };
 
 export const fetchIngredients = createAsyncThunk<TIngredient[], void>(
   'ingredients/fetchIngredients',
   async () => {
-    const ingredients = await getIngredientsApi();
-    return ingredients;
+    const response = await getIngredientsApi();
+    return response;
   }
 );
 
@@ -34,16 +36,19 @@ export const ingredientSlice = createSlice({
     builder
       .addCase(fetchIngredients.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(
         fetchIngredients.fulfilled,
         (state, action: PayloadAction<TIngredient[]>) => {
           state.isLoading = false;
           state.ingredients = action.payload;
+          state.error = null;
         }
       )
-      .addCase(fetchIngredients.rejected, (state, action) => {
+      .addCase(fetchIngredients.rejected, (state) => {
         state.isLoading = false;
+        state.error = 'Error ingredients not found';
       });
   }
 });

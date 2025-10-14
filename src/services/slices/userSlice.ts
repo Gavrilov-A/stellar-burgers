@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   registerUserApi,
   loginUserApi,
@@ -25,73 +25,65 @@ const initialState: UserState = {
   error: null
 };
 
-export const registerUser = createAsyncThunk<
-  TUser,
-  TRegisterData,
-  { rejectValue: string }
->('user/register', async (userData, { rejectWithValue }) => {
-  try {
+export const registerUser = createAsyncThunk<TUser, TRegisterData>(
+  'user/register',
+  async (userData: TRegisterData) => {
     const response = await registerUserApi(userData);
     localStorage.setItem('refreshToken', response.refreshToken);
     setCookie('accessToken', response.accessToken);
     return response.user;
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Registration failed');
   }
-});
+);
 
-export const loginUser = createAsyncThunk<
-  TUser,
-  TLoginData,
-  { rejectValue: string }
->('user/login', async (loginData, { rejectWithValue }) => {
-  try {
+export const loginUser = createAsyncThunk<TUser, TLoginData>(
+  'user/login',
+  async (loginData: TLoginData) => {
     const response = await loginUserApi(loginData);
     localStorage.setItem('refreshToken', response.refreshToken);
     setCookie('accessToken', response.accessToken);
     return response.user;
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Login failed');
-  }
-});
-
-export const loadUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
-  'user/load',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getUserApi();
-      return response.user;
-    } catch (err: any) {
-      return rejectWithValue('Not authenticated');
-    }
   }
 );
 
-export const updateUser = createAsyncThunk<
-  TUser,
-  Partial<TRegisterData>,
-  { rejectValue: string }
->('user/update', async (userData, { rejectWithValue }) => {
-  try {
+export const loadUser = createAsyncThunk<TUser, void>('user/load', async () => {
+  const response = await getUserApi();
+  return response.user;
+});
+
+export const updateUser = createAsyncThunk<TUser, Partial<TRegisterData>>(
+  'user/update',
+  async (userData: Partial<TRegisterData>) => {
     const response = await updateUserApi(userData);
     return response.user;
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Update failed');
-  }
-});
-
-export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
-  'user/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      await logoutApi();
-      localStorage.removeItem('refreshToken');
-      setCookie('accessToken', '');
-    } catch (err: any) {
-      return rejectWithValue(err.message || 'Logout failed');
-    }
   }
 );
+
+export const logoutUser = createAsyncThunk<void, void>(
+  'user/logout',
+  async () => {
+    await logoutApi();
+    localStorage.removeItem('refreshToken');
+    setCookie('accessToken', '');
+  }
+);
+
+const handleAuthError = (state: UserState, error: string) => {
+  state.isAuthChecked = false;
+  state.isLoading = false;
+  state.error = error;
+};
+
+const handleLoadingStart = (state: UserState) => {
+  state.isAuthChecked = false;
+  state.isLoading = true;
+  state.error = null;
+};
+
+const handleSuccess = (state: UserState) => {
+  state.isAuthChecked = true;
+  state.isLoading = false;
+  state.error = null;
+};
 
 const userSlice = createSlice({
   name: 'user',
@@ -99,38 +91,54 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthChecked = true;
-        state.isLoading = false;
+      //Регистрация
+      .addCase(registerUser.pending, handleLoadingStart)
+      .addCase(
+        registerUser.fulfilled,
+        (state, action: PayloadAction<TUser>) => {
+          state.user = action.payload;
+          handleSuccess(state);
+        }
+      )
+      .addCase(registerUser.rejected, (state) => {
+        handleAuthError(state, 'Error not found');
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      //Авторизация
+      .addCase(loginUser.pending, handleLoadingStart)
+      .addCase(loginUser.fulfilled, (state, action: PayloadAction<TUser>) => {
         state.user = action.payload;
-        state.isAuthChecked = true;
-        state.isLoading = false;
+        handleSuccess(state);
       })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.user = null;
-        state.isAuthChecked = false;
-        state.isLoading = false;
-        state.error = action.payload || 'Error';
+      .addCase(loginUser.rejected, (state) => {
+        handleAuthError(state, 'Email и пароль обязательны');
       })
-      .addCase(loadUser.fulfilled, (state, action) => {
+      //Загрузка пользователя
+      .addCase(loadUser.pending, handleLoadingStart)
+      .addCase(loadUser.fulfilled, (state, action: PayloadAction<TUser>) => {
         state.user = action.payload;
-        state.isAuthChecked = true;
-        state.isLoading = false;
+        handleSuccess(state);
       })
       .addCase(loadUser.rejected, (state) => {
-        state.isAuthChecked = true;
-        state.isLoading = false;
+        handleAuthError(state, 'Error not found');
       })
-      .addCase(updateUser.fulfilled, (state, action) => {
+      //Обновление данных
+      .addCase(updateUser.pending, handleLoadingStart)
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<TUser>) => {
         state.user = action.payload;
-        state.isLoading = false;
+        handleSuccess(state);
       })
+      .addCase(updateUser.rejected, (state) => {
+        handleAuthError(state, 'Error not found');
+      })
+      //Выход
+      .addCase(logoutUser.pending, handleLoadingStart)
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-        state.isAuthChecked = true;
+        state.isAuthChecked = false;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        handleAuthError(state, 'Error not found');
       });
   }
 });

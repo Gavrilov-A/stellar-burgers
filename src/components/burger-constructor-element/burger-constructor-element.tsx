@@ -1,17 +1,32 @@
 import { FC, memo } from 'react';
 import { BurgerConstructorElementUI } from '@ui';
 import { BurgerConstructorElementProps } from './type';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  moveIngredientDown,
+  moveIngredientUp,
+  removeIngredient
+} from '../../services/slices/burgerSlice';
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
   ({ ingredient, index, totalItems }) => {
-    const navigate = useNavigate();
-    const handleMoveDown = () => {};
+    const dispatch = useDispatch();
 
-    const handleMoveUp = () => {};
+    const handleMoveDown = () => {
+      if (index < totalItems - 1) {
+        dispatch(moveIngredientDown(index));
+      }
+    };
+
+    const handleMoveUp = () => {
+      if (index > 0) {
+        dispatch(moveIngredientUp(index));
+      }
+    };
 
     const handleClose = () => {
-      navigate(-1);
+      dispatch(removeIngredient(ingredient._id));
     };
 
     return (

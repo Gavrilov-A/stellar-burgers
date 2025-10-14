@@ -18,18 +18,13 @@ const initialState: TFeedState = {
   error: null
 };
 
-export const fetchFeeds = createAsyncThunk<
-  TFeedsResponse,
-  void,
-  { rejectValue: string }
->('feeds/fetchFeeds', async (_, { rejectWithValue }) => {
-  try {
+export const fetchFeeds = createAsyncThunk<TFeedsResponse, void>(
+  'feeds/fetchFeeds',
+  async () => {
     const data = await getFeedsApi();
     return data;
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Failed to fetch feeds');
   }
-});
+);
 
 export const feedsSlice = createSlice({
   name: 'feeds',
@@ -48,28 +43,15 @@ export const feedsSlice = createSlice({
           state.orders = action.payload.orders;
           state.total = action.payload.total;
           state.totalToday = action.payload.totalToday;
+          state.error = null;
         }
       )
-      .addCase(fetchFeeds.rejected, (state, action) => {
+      .addCase(fetchFeeds.rejected, (state) => {
+        state.orders = [];
         state.isLoading = false;
-        state.error = action.payload || 'Unknown error';
+        state.error = 'Error feeds not found';
       });
-  },
-  selectors: {
-    getFeedsOrders: (state) => state.orders,
-    getFeedsTotal: (state) => state.total,
-    getFeedsTotalToday: (state) => state.totalToday,
-    isFeedsLoading: (state) => state.isLoading,
-    getFeedsError: (state) => state.error
   }
 });
-
-export const {
-  getFeedsOrders,
-  getFeedsTotal,
-  getFeedsTotalToday,
-  isFeedsLoading,
-  getFeedsError
-} = feedsSlice.selectors;
 
 export default feedsSlice;
