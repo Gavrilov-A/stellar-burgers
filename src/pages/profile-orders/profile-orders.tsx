@@ -5,7 +5,7 @@ import { useSelector } from '../../services/store';
 
 export const ProfileOrders: FC = () => {
   /** TODO: взять переменную из стора */
-  const orders: TOrder[] = useSelector((state) => state.orders.orders);
-
+  const orders: TOrder[] = useSelector((state) => state.feeds.orders);
+  console.log(orders);
   return <ProfileOrdersUI orders={orders} />;
 };

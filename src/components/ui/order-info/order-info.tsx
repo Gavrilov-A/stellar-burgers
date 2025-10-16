@@ -19,6 +19,7 @@ export const OrderInfoUI: FC<OrderInfoUIProps> = memo(({ orderInfo }) => (
     <ul className={`${styles.list} mb-8`}>
       {Object.values(orderInfo.ingredientsInfo).map((item, index) => (
         <li className={`pb-4 pr-6 ${styles.item}`} key={index}>
+          //было _id
           <div className={styles.img_wrap}>
             <div className={styles.border}>
               <img

@@ -8,12 +8,11 @@ import { fetchFeeds } from '../../services/slices/feedsSlice';
 export const Feed: FC = () => {
   /** TODO: взять переменную из стора */
   const orders: TOrder[] = useSelector((state) => state.feeds.orders);
-  console.log(orders);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchFeeds());
   }, []);
-
+  console.log(orders);
   if (!orders.length) {
     return <Preloader />;
   }

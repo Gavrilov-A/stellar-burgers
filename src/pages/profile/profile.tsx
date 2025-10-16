@@ -6,8 +6,12 @@ import { loadUser, updateUser } from '../../services/slices/userSlice';
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(loadUser());
+  // }, [dispatch]);
 
   const user = useSelector((state) => state.user.user);
+  console.log(user);
   if (!user) {
     return null;
   }
@@ -61,6 +65,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

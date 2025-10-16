@@ -5,29 +5,32 @@ import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import { getIngredients } from '../../services/slices/ingredientSlice';
 import { fetchOrderByNumber } from '../../services/slices/orderSlice';
+import { useParams } from 'react-router-dom';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
-
-  // const orderData = {
-  //   createdAt: '',
-  //   ingredients: [],
-  //   _id: '',
-  //   status: '',
-  //   name: '',
-  //   updatedAt: 'string',
-  //   number: 0
-  // };
-
-  const { orders, order } = useSelector((state) => state.orders);
+  const number = useParams();
+  const orderData = useSelector((state) => {
+    let order = state.feeds.orders.find((item) => item.number === +number);
+    state.orders;
+    if (order) {
+      return order;
+    }
+    order = state.orders.orders.find((item) => item.number === +number);
+    state.orders;
+    if (order) {
+      return order;
+    }
+    return state.orders.order;
+  });
+  console.log(orderData);
   const dispatch = useDispatch();
   const ingredients: TIngredient[] = useSelector(
     (state) => state.ingredients.ingredients
   );
 
-  const orderData = orders.find((item) => item._id === order?._id);
   useEffect(() => {
-    dispatch(fetchOrderByNumber(order?.number || 0));
+    dispatch(fetchOrderByNumber(orderData?.number || 0));
   }, [dispatch]);
 
   /* Готовим данные для отображения */

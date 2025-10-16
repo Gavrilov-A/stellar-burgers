@@ -9,30 +9,34 @@ import { useDispatch, useSelector } from '../../services/store';
 import { createOrder, fetchOrders } from '../../services/slices/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { getOrdersApi } from '@api';
+import { loadUser } from '../../services/slices/userSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const bun = useSelector((state) => state.burger.bun);
-  const burgerIngredients = useSelector((state) => state.burger.ingredients);
+  const { bun, ingredients } = useSelector((state) => state.burger);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const orderRequest = useSelector((state) => state.orders.isLoading);
+  const orderModalData = useSelector((state) => state.orders.order);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const constructorItems = {
     bun: bun,
-    ingredients: burgerIngredients
+    ingredients: ingredients
   };
-
-  const orderRequest = false;
-
-  const orderModalData = null;
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    const ingredientsBurger = constructorItems.ingredients;
-    ingredientsBurger.push(constructorItems.bun);
+    const ingredientsBurger = [
+      constructorItems.bun,
+      ...constructorItems.ingredients,
+      constructorItems.bun
+    ];
     const totalBurger = ingredientsBurger.map((item) => item._id);
-    console.log(totalBurger);
-    dispatch(createOrder(totalBurger));
+
+    if (isAuthenticated) {
+      dispatch(createOrder(totalBurger));
+    } else navigate('/login');
   };
   const closeOrderModal = () => {};
 

@@ -15,12 +15,19 @@ import styles from './app.module.css';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { replace, Route, Routes, useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '../routes/ProtectedRoute';
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { loadUser } from '../../services/slices/userSlice';
 
 const App = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handelModalClose = () => {
     navigate(-1);
   };
+  useEffect(() => {
+    dispatch(loadUser());
+  }, []);
   return (
     <div className={styles.app}>
       <AppHeader />
@@ -54,15 +61,16 @@ const App = () => {
         <Route
           path='/reset-password'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ResetPassword />
             </ProtectedRoute>
           }
         />
+
         <Route
           path='/profile'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
           }
@@ -70,12 +78,27 @@ const App = () => {
         <Route
           path='/profile/orders'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute>
               <ProfileOrders />
             </ProtectedRoute>
           }
         />
-        <Route path='*' element={<NotFound404 />} />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <Modal
+                title=''
+                onClose={() => {
+                  handelModalClose();
+                }}
+              >
+                <OrderInfo />
+              </Modal>
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path='/feed:number'
           element={
@@ -100,21 +123,8 @@ const App = () => {
             </Modal>
           }
         />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute onlyUnAuth>
-              <Modal
-                title=''
-                onClose={() => {
-                  handelModalClose();
-                }}
-              >
-                <OrderInfo />
-              </Modal>
-            </ProtectedRoute>
-          }
-        />
+
+        <Route path='*' element={<NotFound404 />} />
       </Routes>
     </div>
   );

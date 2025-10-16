@@ -7,26 +7,22 @@ import { Navigate, useNavigate } from 'react-router-dom';
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | undefined>(undefined);
   const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.user.isAuthChecked);
-  const loginError = useSelector((state) => state.user.error);
+  const { loginUserError } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   dispatch(loadUser());
-  // }, []);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    setFormError(null);
+    setFormError(undefined);
     if (!email.trim() || !password.trim()) {
       setFormError('Email и пароль обязательны');
       return;
     }
-    dispatch(loginUser({ email, password }));
+    dispatch(loginUser({ email: email, password: password }));
   };
-  const errorText = formError || loginError || '';
+  const errorText = formError || loginUserError || '';
+
   return (
     <LoginUI
       errorText={errorText}

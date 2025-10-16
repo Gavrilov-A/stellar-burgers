@@ -19,9 +19,9 @@ export const burgerSlice = createSlice({
       state.ingredients.push(action.payload);
     },
 
-    removeIngredient: (state, action: PayloadAction<string>) => {
+    removeIngredient: (state, action: PayloadAction<number>) => {
       state.ingredients = state.ingredients.filter(
-        (ingredient) => ingredient._id !== action.payload
+        (_, index) => index !== action.payload
       );
     },
 
@@ -45,6 +45,10 @@ export const burgerSlice = createSlice({
           state.ingredients[index]
         ];
       }
+    },
+    clearIngredients: (state) => {
+      state.ingredients = [];
+      state.bun = null;
     }
   }
 });
@@ -54,5 +58,6 @@ export const {
   removeIngredient,
   setBun,
   moveIngredientUp,
-  moveIngredientDown
+  moveIngredientDown,
+  clearIngredients
 } = burgerSlice.actions;

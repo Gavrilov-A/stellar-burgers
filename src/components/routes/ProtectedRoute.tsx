@@ -11,27 +11,18 @@ export const ProtectedRoute = ({
   children,
   onlyUnAuth
 }: ProtectedRouteProps) => {
-  const { user, isAuthChecked } = useSelector((state) => state.user);
+  const { isAuthenticated, isAuthChecked } = useSelector((state) => state.user);
   const location = useLocation();
-  console.log(isAuthChecked);
 
-  // if (!isAuthChecked) {
-  //   return <Preloader />;
-  // }
-
-  if (!onlyUnAuth && !user) {
-    //  если маршрут для авторизованного пользователя, но пользователь неавторизован, то делаем редирект
-    return <Navigate replace to='/login' state={{ from: location }} />; // в поле from объекта location.state записываем информацию о URL
+  if (!isAuthChecked) {
+    return <Preloader />;
+  }
+  if (onlyUnAuth && isAuthenticated) {
+    return <Navigate to='/profile' replace />;
   }
 
-  if (onlyUnAuth && user) {
-    //  если маршрут для неавторизованного пользователя, но пользователь авторизован
-    // при обратном редиректе  получаем данные о месте назначения редиректа из объекта location.state
-    // в случае если объекта location.state?.from нет — а такое может быть , если мы зашли на страницу логина по прямому URL
-    // мы сами создаём объект c указанием адреса и делаем переадресацию на главную страницу
-    const from = location.state?.from || { pathname: '/profile' };
-
-    return <Navigate replace to={from} />;
+  if (!onlyUnAuth && !isAuthenticated) {
+    return <Navigate to='/login' replace state={{ from: location }} />;
   }
 
   return children;

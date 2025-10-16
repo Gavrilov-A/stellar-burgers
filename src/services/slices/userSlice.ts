@@ -14,15 +14,17 @@ import { setCookie, getCookie } from '../../utils/cookie';
 interface UserState {
   user: TUser | null;
   isAuthChecked: boolean;
+  isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
+  loginUserError: string | undefined;
 }
 
 const initialState: UserState = {
   user: null,
   isAuthChecked: false,
+  isAuthenticated: false,
   isLoading: false,
-  error: null
+  loginUserError: undefined
 };
 
 export const registerUser = createAsyncThunk<TUser, TRegisterData>(
@@ -67,22 +69,21 @@ export const logoutUser = createAsyncThunk<void, void>(
   }
 );
 
-const handleAuthError = (state: UserState, error: string) => {
-  state.isAuthChecked = false;
-  state.isLoading = false;
-  state.error = error;
-};
-
 const handleLoadingStart = (state: UserState) => {
-  state.isAuthChecked = false;
   state.isLoading = true;
-  state.error = null;
+  state.loginUserError = undefined;
 };
 
 const handleSuccess = (state: UserState) => {
   state.isAuthChecked = true;
+  state.isAuthenticated = true;
   state.isLoading = false;
-  state.error = null;
+  state.loginUserError = undefined;
+};
+const handleAuthError = (state: UserState, error: string) => {
+  state.isAuthChecked = true;
+  state.isLoading = false;
+  state.loginUserError = error;
 };
 
 const userSlice = createSlice({
@@ -110,7 +111,7 @@ const userSlice = createSlice({
         handleSuccess(state);
       })
       .addCase(loginUser.rejected, (state) => {
-        handleAuthError(state, 'Email и пароль обязательны');
+        handleAuthError(state, 'Неправильный email или пароль');
       })
       //Загрузка пользователя
       .addCase(loadUser.pending, handleLoadingStart)
@@ -119,7 +120,7 @@ const userSlice = createSlice({
         handleSuccess(state);
       })
       .addCase(loadUser.rejected, (state) => {
-        handleAuthError(state, 'Error not found');
+        handleAuthError(state, '');
       })
       //Обновление данных
       .addCase(updateUser.pending, handleLoadingStart)
@@ -128,17 +129,15 @@ const userSlice = createSlice({
         handleSuccess(state);
       })
       .addCase(updateUser.rejected, (state) => {
-        handleAuthError(state, 'Error not found');
+        handleAuthError(state, 'Данные не обновлены');
       })
       //Выход
       .addCase(logoutUser.pending, handleLoadingStart)
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-        state.isAuthChecked = false;
-        state.error = null;
       })
       .addCase(logoutUser.rejected, (state) => {
-        handleAuthError(state, 'Error not found');
+        handleAuthError(state, 'Выход не выполнен');
       });
   }
 });
