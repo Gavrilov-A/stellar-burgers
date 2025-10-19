@@ -11,8 +11,7 @@ export const Feed: FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchFeeds());
-  }, []);
-  console.log(orders);
+  }, [dispatch]);
   if (!orders.length) {
     return <Preloader />;
   }

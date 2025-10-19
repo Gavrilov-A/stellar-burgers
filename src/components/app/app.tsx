@@ -13,16 +13,24 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { replace, Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  replace,
+  Route,
+  Routes,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import { ProtectedRoute } from '../routes/ProtectedRoute';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { loadUser } from '../../services/slices/userSlice';
+import { clearOrder } from '../../services/slices/orderSlice';
 
 const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handelModalClose = () => {
+    dispatch(clearOrder());
     navigate(-1);
   };
   useEffect(() => {
@@ -100,7 +108,7 @@ const App = () => {
         />
 
         <Route
-          path='/feed:number'
+          path='/feed/:number'
           element={
             <Modal
               title=''

@@ -9,7 +9,7 @@ import {
   TLoginData
 } from '@api';
 import { TUser } from '@utils-types';
-import { setCookie, getCookie } from '../../utils/cookie';
+import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
 interface UserState {
   user: TUser | null;
@@ -61,11 +61,16 @@ export const updateUser = createAsyncThunk<TUser, Partial<TRegisterData>>(
 );
 
 export const logoutUser = createAsyncThunk<void, void>(
-  'user/logout',
+  'user/logoutUser',
   async () => {
-    await logoutApi();
-    localStorage.removeItem('refreshToken');
-    setCookie('accessToken', '');
+    logoutApi()
+      .then(() => {
+        localStorage.clear();
+        deleteCookie('accessToken');
+      })
+      .catch(() => {
+        console.log('Ошибка выполнения выхода');
+      });
   }
 );
 
@@ -89,7 +94,11 @@ const handleAuthError = (state: UserState, error: string) => {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    clearUserError: (state) => {
+      state.loginUserError = undefined;
+    }
+  },
   extraReducers: (builder) => {
     builder
       //Регистрация
@@ -102,7 +111,7 @@ const userSlice = createSlice({
         }
       )
       .addCase(registerUser.rejected, (state) => {
-        handleAuthError(state, 'Error not found');
+        handleAuthError(state, 'Пользователь не зарегистрирован');
       })
       //Авторизация
       .addCase(loginUser.pending, handleLoadingStart)
@@ -135,6 +144,7 @@ const userSlice = createSlice({
       .addCase(logoutUser.pending, handleLoadingStart)
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+        state.isAuthenticated = false;
       })
       .addCase(logoutUser.rejected, (state) => {
         handleAuthError(state, 'Выход не выполнен');
@@ -142,4 +152,5 @@ const userSlice = createSlice({
   }
 });
 
+export const { clearUserError } = userSlice.actions;
 export default userSlice;

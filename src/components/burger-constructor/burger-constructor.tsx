@@ -1,15 +1,10 @@
 import { FC, useMemo, useEffect } from 'react';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import {
-  fetchIngredients,
-  getIngredients
-} from '../../services/slices/ingredientSlice';
 import { useDispatch, useSelector } from '../../services/store';
-import { createOrder, fetchOrders } from '../../services/slices/orderSlice';
-import { useNavigate } from 'react-router-dom';
-import { getOrdersApi } from '@api';
-import { loadUser } from '../../services/slices/userSlice';
+import { createOrder, clearOrder } from '../../services/slices/orderSlice';
+import { replace, useNavigate } from 'react-router-dom';
+import { clearIngredients } from '../../services/slices/burgerSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
@@ -38,7 +33,10 @@ export const BurgerConstructor: FC = () => {
       dispatch(createOrder(totalBurger));
     } else navigate('/login');
   };
-  const closeOrderModal = () => {};
+  const closeOrderModal = () => {
+    dispatch(clearIngredients());
+    dispatch(clearOrder());
+  };
 
   const price = useMemo(
     () =>

@@ -6,13 +6,19 @@ import { useDispatch, useSelector } from '../../services/store';
 import { getIngredients } from '../../services/slices/ingredientSlice';
 import { fetchOrderByNumber } from '../../services/slices/orderSlice';
 import { useParams } from 'react-router-dom';
+import { Modal } from '@components';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
-  const number = useParams();
+  const { number } = useParams();
+  const dispatch = useDispatch();
+  const ingredients: TIngredient[] = useSelector(
+    (state) => state.ingredients.ingredients
+  );
+
   const orderData = useSelector((state) => {
+    if (!number) return null;
     let order = state.feeds.orders.find((item) => item.number === +number);
-    state.orders;
     if (order) {
       return order;
     }
@@ -23,15 +29,15 @@ export const OrderInfo: FC = () => {
     }
     return state.orders.order;
   });
-  console.log(orderData);
-  const dispatch = useDispatch();
-  const ingredients: TIngredient[] = useSelector(
-    (state) => state.ingredients.ingredients
-  );
 
   useEffect(() => {
-    dispatch(fetchOrderByNumber(orderData?.number || 0));
-  }, [dispatch]);
+    if (number) {
+      const num = +number;
+      if (!isNaN(num)) {
+        dispatch(fetchOrderByNumber(num));
+      }
+    }
+  }, []);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -79,5 +85,9 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return (
+    <Modal title={`Заказ №${number}`} onClose={() => {}}>
+      <OrderInfoUI orderInfo={orderInfo} />
+    </Modal>
+  );
 };

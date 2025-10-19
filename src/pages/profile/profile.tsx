@@ -6,21 +6,17 @@ import { loadUser, updateUser } from '../../services/slices/userSlice';
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(loadUser());
-  // }, [dispatch]);
 
   const user = useSelector((state) => state.user.user);
-  console.log(user);
-  if (!user) {
-    return null;
-  }
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: '',
+    email: '',
     password: ''
   });
+  // useEffect(() => {
+  //   dispatch(loadUser());
+  // }, [dispatch, user]);
 
   useEffect(() => {
     setFormValue((prevState) => ({
@@ -29,6 +25,10 @@ export const Profile: FC = () => {
       email: user?.email || ''
     }));
   }, [user]);
+
+  if (!user) {
+    return null;
+  }
 
   const isFormChanged =
     formValue.name !== user?.name ||

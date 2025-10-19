@@ -17,6 +17,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
     (state) => state.ingredients.ingredients
   );
   const orderInfo = useMemo(() => {
+    // TODO it`s error
     if (!ingredients.length) return null;
 
     const ingredientsInfo = order.ingredients.reduce(
@@ -47,7 +48,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
       date
     };
   }, [order, ingredients]);
-
   if (!orderInfo) return null;
 
   return (
