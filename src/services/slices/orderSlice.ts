@@ -4,6 +4,8 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { TNewOrderResponse } from '../../utils/burger-api';
+import { AppDispatch } from '../store';
+import { clearIngredients } from './burgerSlice';
 
 type OrderState = {
   order: TOrder | null;
@@ -27,13 +29,15 @@ export const fetchOrders = createAsyncThunk<TOrder[], void>(
   }
 );
 
-export const createOrder = createAsyncThunk<TNewOrderResponse, string[]>(
-  'orders/createOrder',
-  async (ingredients: string[]) => {
-    const response = await orderBurgerApi(ingredients);
-    return response;
-  }
-);
+export const createOrder = createAsyncThunk<
+  TNewOrderResponse,
+  string[],
+  { dispatch: AppDispatch }
+>('orders/createOrder', async (ingredients: string[], { dispatch }) => {
+  const response = await orderBurgerApi(ingredients);
+  dispatch(clearIngredients());
+  return response;
+});
 
 export const fetchOrderByNumber = createAsyncThunk<TOrder, number>(
   'orders/fetchOrderByNumber',

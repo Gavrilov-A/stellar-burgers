@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { AppHeaderUI } from '@ui';
-import { useSelector } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
+import { loadUser } from '../../services/slices/userSlice';
 
 export const AppHeader: FC = () => {
   const userName = useSelector((state) => state.user.user);

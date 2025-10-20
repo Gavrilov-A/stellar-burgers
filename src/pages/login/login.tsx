@@ -6,7 +6,7 @@ import {
   loadUser,
   loginUser
 } from '../../services/slices/userSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +14,9 @@ export const Login: FC = () => {
   const [errorForm, setErrorForm] = useState('');
   const dispatch = useDispatch();
   const { loginUserError } = useSelector((state) => state.user);
+  const location = useLocation();
   const navigate = useNavigate();
+  const from = location.state?.from;
 
   useEffect(() => {
     dispatch(clearUserError());
@@ -26,8 +28,17 @@ export const Login: FC = () => {
     setErrorForm('');
     if (!email || !password) {
       setErrorForm('Email и пароль обязательны');
+      return;
     }
-    dispatch(loginUser({ email: email, password: password }));
+    dispatch(loginUser({ email: email, password: password }))
+      .then(() => {
+        if (from) {
+          navigate(from || '/');
+        }
+      })
+      .catch((error) => {
+        setErrorForm('Неверные данные');
+      });
   };
   const errorText = errorForm || loginUserError;
 

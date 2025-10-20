@@ -5,7 +5,7 @@ import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import { getIngredients } from '../../services/slices/ingredientSlice';
 import { fetchOrderByNumber } from '../../services/slices/orderSlice';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Modal } from '@components';
 
 export const OrderInfo: FC = () => {
@@ -85,9 +85,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return (
-    <Modal title={`Заказ №${number}`} onClose={() => {}}>
-      <OrderInfoUI orderInfo={orderInfo} />
-    </Modal>
-  );
+  return <OrderInfoUI orderInfo={orderInfo} />;
 };

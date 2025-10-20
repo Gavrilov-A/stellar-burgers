@@ -3,18 +3,18 @@ import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
 import { createOrder, clearOrder } from '../../services/slices/orderSlice';
-import { replace, useNavigate } from 'react-router-dom';
+import { replace, useLocation, useNavigate } from 'react-router-dom';
 import { clearIngredients } from '../../services/slices/burgerSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const { bun, ingredients } = useSelector((state) => state.burger);
-  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
   const orderRequest = useSelector((state) => state.orders.isLoading);
   const orderModalData = useSelector((state) => state.orders.order);
+  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const constructorItems = {
     bun: bun,
     ingredients: ingredients
@@ -31,10 +31,9 @@ export const BurgerConstructor: FC = () => {
 
     if (isAuthenticated) {
       dispatch(createOrder(totalBurger));
-    } else navigate('/login');
+    } else navigate('/login', { state: { from: location } });
   };
   const closeOrderModal = () => {
-    dispatch(clearIngredients());
     dispatch(clearOrder());
   };
 
