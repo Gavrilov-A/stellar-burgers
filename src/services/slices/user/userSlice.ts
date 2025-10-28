@@ -7,11 +7,11 @@ import {
   logoutApi,
   TRegisterData,
   TLoginData
-} from '@api';
+} from '../../../utils/burger-api';
 import { TUser } from '@utils-types';
-import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
+import { setCookie, getCookie, deleteCookie } from '../../../utils/cookie';
 
-interface UserState {
+export interface UserState {
   user: TUser | null;
   isAuthChecked: boolean;
   isAuthenticated: boolean;
@@ -129,7 +129,7 @@ const userSlice = createSlice({
         handleSuccess(state);
       })
       .addCase(loadUser.rejected, (state) => {
-        handleAuthError(state, '');
+        handleAuthError(state, 'Пользователь не найден');
       })
       //Обновление данных
       .addCase(updateUser.pending, handleLoadingStart)

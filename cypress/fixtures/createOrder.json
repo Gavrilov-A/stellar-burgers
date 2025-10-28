@@ -1,0 +1,77 @@
+{
+    "success": true,
+    "name": "Флюоресцентный spicy люминесцентный бургер",
+    "order": {
+        "ingredients": [
+            {
+                "_id": "643d69a5c3f7b9001cfa093d",
+                "name": "Флюоресцентная булка R2-D3",
+                "type": "bun",
+                "proteins": 44,
+                "fat": 26,
+                "carbohydrates": 85,
+                "calories": 643,
+                "price": 988,
+                "image": "https://code.s3.yandex.net/react/code/bun-01.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/bun-01-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/bun-01-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa093e",
+                "name": "Филе Люминесцентного тетраодонтимформа",
+                "type": "main",
+                "proteins": 44,
+                "fat": 26,
+                "carbohydrates": 85,
+                "calories": 643,
+                "price": 988,
+                "image": "https://code.s3.yandex.net/react/code/meat-03.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/meat-03-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/meat-03-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa0942",
+                "name": "Соус Spicy-X",
+                "type": "sauce",
+                "proteins": 30,
+                "fat": 20,
+                "carbohydrates": 40,
+                "calories": 30,
+                "price": 90,
+                "image": "https://code.s3.yandex.net/react/code/sauce-02.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/sauce-02-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/sauce-02-large.png",
+                "__v": 0
+            },
+            {
+                "_id": "643d69a5c3f7b9001cfa093d",
+                "name": "Флюоресцентная булка R2-D3",
+                "type": "bun",
+                "proteins": 44,
+                "fat": 26,
+                "carbohydrates": 85,
+                "calories": 643,
+                "price": 988,
+                "image": "https://code.s3.yandex.net/react/code/bun-01.png",
+                "image_mobile": "https://code.s3.yandex.net/react/code/bun-01-mobile.png",
+                "image_large": "https://code.s3.yandex.net/react/code/bun-01-large.png",
+                "__v": 0
+            }
+        ],
+        "_id": "68fdff2774993f001b5bb39a",
+        "owner": {
+            "name": "Андрей",
+            "email": "blockjok@yandex.ru",
+            "createdAt": "2025-10-12T11:40:37.185Z",
+            "updatedAt": "2025-10-19T12:45:19.010Z"
+        },
+        "status": "done",
+        "name": "Флюоресцентный spicy люминесцентный бургер",
+        "createdAt": "2025-10-26T10:59:51.081Z",
+        "updatedAt": "2025-10-26T10:59:52.098Z",
+        "number": 92236,
+        "price": 3054
+    }
+}

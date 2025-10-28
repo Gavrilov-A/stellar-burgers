@@ -1,0 +1,9 @@
+{
+    "success": true,
+    "accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWI5M2I1NjczMDg2MDAxYmE4ZGVhZCIsImlhdCI6MTc2MTQ3MjAyOCwiZXhwIjoxNzYxNDczMjI4fQ.etV7ua0dBwfie1WeyVpesOZmUmRQ8ZrwGGiWVa8jrbE",
+    "refreshToken": "fbf461e5729eb8b3f57a19023994dcdb515f88990ffdd8f939779ac02bd7813cedce6c94a055b8ce",
+    "user": {
+        "email": "blockjok@yandex.ru",
+        "name": "Андрей"
+    }
+}

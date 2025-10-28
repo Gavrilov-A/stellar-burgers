@@ -1,5 +1,5 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TIngredient } from '../../utils/types';
+import { TIngredient } from '../../../utils/types';
 import uuid from 'react-uuid';
 
 type TBurgerState = {
@@ -11,8 +11,7 @@ const initialState: TBurgerState = {
   bun: null,
   ingredients: []
 };
-
-export const burgerSlice = createSlice({
+const burgerSlice = createSlice({
   name: 'burger',
   initialState,
   reducers: {
@@ -67,3 +66,5 @@ export const {
   moveIngredientDown,
   clearIngredients
 } = burgerSlice.actions;
+
+export default burgerSlice;
