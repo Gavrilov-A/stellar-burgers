@@ -58,7 +58,7 @@ describe('Создание заказа', () => {
     cy.contains('Оформить заказ').click();
     cy.wait('@createOrder').then((interception) => {
       expect(interception.request.headers.authorization).to.eq(
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWI5M2I1NjczMDg2MDAxYmE4ZGVhZCIsImlhdCI6MTc2MTQ3NjM5MSwiZXhwIjoxNzYxNDc3NTkxfQ.oSod_llMqBhJ1ohOY7D9PSaPxzcA8it99AzVj_Ae1YM'
+        'testAccessToken'
       );
     });
     cy.get('[data-cy=modal]').should('be.visible');
