@@ -1,35 +1,38 @@
+import { CONSTANTS } from "cypress/fixtures/constants";
+
 describe('проверяем доступность приложения', () => {
   beforeEach(() => {
     cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' }).as(
       'getIngredients'
     );
 
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.wait('@getIngredients');
   });
   it('Получаем ингредиенты', () => {
     cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' }).as(
       'getIngredients'
     );
-    cy.visit('http://localhost:4000');
     cy.wait('@getIngredients');
   });
 
   it('Добавление ингредиентов в конструктор', () => {
-    const buttonBun = cy.get(`[data-cy='643d69a5c3f7b9001cfa093d'] button`);
+    const buttonBun = cy.get(`[data-cy=${CONSTANTS.BUN_ID}] button`);
     const buttonIngredient = cy.get(
-      `[data-cy='643d69a5c3f7b9001cfa093e'] button`
+      `[data-cy=${CONSTANTS.BUN_ID}] button`
     );
     buttonBun.click();
     buttonIngredient.click();
   });
 
   it('Работа модального окна', () => {
-    const bun = cy.get(`[data-cy='643d69a5c3f7b9001cfa093d'] a`);
+    const bun = cy.get(`[data-cy=${CONSTANTS.BUN_ID}] a`);
     bun.click();
-    cy.get(`[data-cy='modal']`).should('be.visible');
+    cy.get(`[data-cy=modal]`).should('be.visible');
+     cy.get(`[data-cy=modal]`).find(`[data-cy=${CONSTANTS.BUN_ID}]`)
     const buttonClose = cy.get(`[data-cy='modal'] button`);
     buttonClose.click();
+    cy.get('[data-cy=modal]').should('not.exist');
   });
 });
 
@@ -48,13 +51,18 @@ describe('Создание заказа', () => {
       cy.setCookie('accessToken', tokens.accessToken);
       cy.setCookie('refreshToken', tokens.refreshToken);
     });
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
 
   it('«Оформить заказ»', () => {
-    cy.get(`[data-cy=${'643d69a5c3f7b9001cfa093d'}] button`).click();
-    cy.get(`[data-cy=${'643d69a5c3f7b9001cfa093e'}] button`).click();
-    cy.get(`[data-cy=${'643d69a5c3f7b9001cfa0942'}] button`).click();
+    cy.get(`[data-cy=${CONSTANTS.BUN_ID}] button`).click();
+    cy.get('[data-cy=bun-top]').contains(`${CONSTANTS.BUN_NAME}`);
+    cy.get('[data-cy=bun-bottom]').contains(`${CONSTANTS.BUN_NAME}`);
+    cy.get(`[data-cy=${CONSTANTS.INGREDIENT_ID_1}] button`).click();
+    cy.get(`[data-cy='listIngredients']`).find(`[data-cy=${CONSTANTS.INGREDIENT_ID_1}]`);
+    cy.get(`[data-cy=${CONSTANTS.INGREDIENT_ID_2}] button`).click();
+    cy.get(`[data-cy='listIngredients']`).find(`[data-cy=${CONSTANTS.INGREDIENT_ID_2}]`);
+
     cy.contains('Оформить заказ').click();
     cy.wait('@createOrder').then((interception) => {
       expect(interception.request.headers.authorization).to.eq(
@@ -62,8 +70,8 @@ describe('Создание заказа', () => {
       );
     });
     cy.get('[data-cy=modal]').should('be.visible');
-    cy.get(`[data-cy='number']`).should('have.text', '92236');
-    cy.get(`[data-cy='modal'] button`).click();
+    cy.get(`[data-cy=number]`).should('have.text', '92236');
+    cy.get(`[data-cy=modal] button`).click();
     cy.get('[data-cy=modal]').should('not.exist');
 
     cy.get('[data-cy="bun-top"]').should('not.exist');

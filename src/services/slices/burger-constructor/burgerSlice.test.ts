@@ -1,5 +1,10 @@
 import { TIngredient } from '@utils-types';
-import burgerSlice, { addIngredient, moveIngredientDown, moveIngredientUp, removeIngredient } from './burgerSlice';
+import burgerSlice, {
+  addIngredient,
+  moveIngredientDown,
+  moveIngredientUp,
+  removeIngredient
+} from './burgerSlice';
 
 jest.mock('react-uuid', () => ({
   __esModule: true,
@@ -19,12 +24,20 @@ const mockIngredient: TIngredient = {
   image_mobile: 'https://code.s3.yandex.net/react/code/meat-03-mobile.png',
   image_large: 'https://code.s3.yandex.net/react/code/meat-03-large.png'
 };
+const initialState = {
+  bun: null,
+  ingredients: [
+    { ...mockIngredient, id: 'id-1' },
+    { ...mockIngredient, id: 'id-2' },
+    { ...mockIngredient, id: 'id-3' }
+  ]
+};
 
 describe('Тесты экшенов burgerSlice', () => {
   it('Обработка экшена добавления ингредиента', () => {
-    const initialState = { bun: null, ingredients: [] };
+    const initialData = { ...initialState, ingredients: [] };
     const action = addIngredient(mockIngredient);
-    const result = burgerSlice.reducer(initialState, action);
+    const result = burgerSlice.reducer(initialData, action);
 
     expect(result.ingredients).toHaveLength(1);
     expect(result.ingredients[0]).toEqual({
@@ -34,14 +47,6 @@ describe('Тесты экшенов burgerSlice', () => {
   });
 
   it('Обработка экшена удаления ингредиента', () => {
-    const initialState = {
-      bun: null,
-      ingredients: [
-        { ...mockIngredient, id: 'id-1' },
-        { ...mockIngredient, id: 'id-2' },
-        { ...mockIngredient, id: 'id-3' }
-      ]
-    };
     const action = removeIngredient(2);
     const result = burgerSlice.reducer(initialState, action);
 
@@ -53,14 +58,6 @@ describe('Тесты экшенов burgerSlice', () => {
   });
 
   it('Обработка экшена поднятие вверх по списку', () => {
-    const initialState = {
-      bun: null,
-      ingredients: [
-        { ...mockIngredient, id: 'id-1' },
-        { ...mockIngredient, id: 'id-2' },
-        { ...mockIngredient, id: 'id-3' }
-      ]
-    };
     const action = moveIngredientUp(2);
     const result = burgerSlice.reducer(initialState, action);
 
@@ -71,14 +68,6 @@ describe('Тесты экшенов burgerSlice', () => {
     ]);
   });
   it('Обработка экшена поднятие вниз по списку', () => {
-    const initialState = {
-      bun: null,
-      ingredients: [
-        { ...mockIngredient, id: 'id-1' },
-        { ...mockIngredient, id: 'id-2' },
-        { ...mockIngredient, id: 'id-3' }
-      ]
-    };
     const action = moveIngredientDown(0);
     const result = burgerSlice.reducer(initialState, action);
 
