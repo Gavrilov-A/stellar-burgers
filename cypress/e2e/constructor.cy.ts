@@ -1,4 +1,4 @@
-import { CONSTANTS } from "cypress/fixtures/constants";
+import { CONSTANTS } from 'cypress/fixtures/constants';
 
 describe('проверяем доступность приложения', () => {
   beforeEach(() => {
@@ -17,21 +17,18 @@ describe('проверяем доступность приложения', () =>
   });
 
   it('Добавление ингредиентов в конструктор', () => {
-    const buttonBun = cy.get(`[data-cy=${CONSTANTS.BUN_ID}] button`);
-    const buttonIngredient = cy.get(
-      `[data-cy=${CONSTANTS.BUN_ID}] button`
-    );
-    buttonBun.click();
-    buttonIngredient.click();
+    cy.get(`[data-cy=${CONSTANTS.BUN_ID}] button`).click();
+    cy.get(`[data-cy=${CONSTANTS.INGREDIENT_ID_1}] button`).click();
   });
 
   it('Работа модального окна', () => {
-    const bun = cy.get(`[data-cy=${CONSTANTS.BUN_ID}] a`);
-    bun.click();
-    cy.get(`[data-cy=modal]`).should('be.visible');
-     cy.get(`[data-cy=modal]`).find(`[data-cy=${CONSTANTS.BUN_ID}]`)
-    const buttonClose = cy.get(`[data-cy='modal'] button`);
-    buttonClose.click();
+    cy.get(`[data-cy=${CONSTANTS.BUN_ID}] a`)
+      .contains(`${CONSTANTS.BUN_NAME}`)
+      .click();
+    cy.get(`[data-cy=modal]`)
+      .should('be.visible')
+      .contains(`${CONSTANTS.BUN_NAME}`);
+    cy.get(`[data-cy='modal'] button`).click();
     cy.get('[data-cy=modal]').should('not.exist');
   });
 });
@@ -59,9 +56,13 @@ describe('Создание заказа', () => {
     cy.get('[data-cy=bun-top]').contains(`${CONSTANTS.BUN_NAME}`);
     cy.get('[data-cy=bun-bottom]').contains(`${CONSTANTS.BUN_NAME}`);
     cy.get(`[data-cy=${CONSTANTS.INGREDIENT_ID_1}] button`).click();
-    cy.get(`[data-cy='listIngredients']`).find(`[data-cy=${CONSTANTS.INGREDIENT_ID_1}]`);
+    cy.get(`[data-cy='listIngredients']`).find(
+      `[data-cy=${CONSTANTS.INGREDIENT_ID_1}]`
+    );
     cy.get(`[data-cy=${CONSTANTS.INGREDIENT_ID_2}] button`).click();
-    cy.get(`[data-cy='listIngredients']`).find(`[data-cy=${CONSTANTS.INGREDIENT_ID_2}]`);
+    cy.get(`[data-cy='listIngredients']`).find(
+      `[data-cy=${CONSTANTS.INGREDIENT_ID_2}]`
+    );
 
     cy.contains('Оформить заказ').click();
     cy.wait('@createOrder').then((interception) => {
