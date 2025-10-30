@@ -1,8 +1,10 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import { clearUserError, registerUser } from '../../services/slices/userSlice';
-import { useNavigate } from 'react-router-dom';
+import {
+  clearUserError,
+  registerUser
+} from '../../services/slices/user/userSlice';
 
 export const Register: FC = () => {
   const [userName, setUserName] = useState('');
@@ -11,7 +13,6 @@ export const Register: FC = () => {
   const [errorForm, setErrorForm] = useState('');
   const { loginUserError } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(clearUserError());
@@ -28,7 +29,6 @@ export const Register: FC = () => {
     dispatch(
       registerUser({ email: email, name: userName, password: password })
     );
-    // navigate('/profile');
   };
 
   const errorText = errorForm || loginUserError || '';

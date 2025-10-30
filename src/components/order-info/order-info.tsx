@@ -3,8 +3,8 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
-import { getIngredients } from '../../services/slices/ingredientSlice';
-import { fetchOrderByNumber } from '../../services/slices/orderSlice';
+import { getIngredients } from '../../services/slices/ingredients/ingredientSlice';
+import { fetchOrderByNumber } from '../../services/slices/orders/orderSlice';
 import { useLocation, useParams } from 'react-router-dom';
 import { Modal } from '@components';
 

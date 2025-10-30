@@ -5,7 +5,7 @@ import {
   clearUserError,
   loadUser,
   loginUser
-} from '../../services/slices/userSlice';
+} from '../../services/slices/user/userSlice';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 export const Login: FC = () => {

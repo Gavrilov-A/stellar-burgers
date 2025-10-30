@@ -24,9 +24,9 @@ import {
 import { ProtectedRoute } from '../routes/ProtectedRoute';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import { loadUser } from '../../services/slices/userSlice';
-import { clearOrder } from '../../services/slices/orderSlice';
-import { fetchIngredients } from '../../services/slices/ingredientSlice';
+import { loadUser } from '../../services/slices/user/userSlice';
+import { clearOrder } from '../../services/slices/orders/orderSlice';
+import { fetchIngredients } from '../../services/slices/ingredients/ingredientSlice';
 
 const App = () => {
   const navigate = useNavigate();

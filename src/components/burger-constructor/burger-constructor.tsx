@@ -2,9 +2,11 @@ import { FC, useMemo, useEffect } from 'react';
 import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import { createOrder, clearOrder } from '../../services/slices/orderSlice';
-import { replace, useLocation, useNavigate } from 'react-router-dom';
-import { clearIngredients } from '../../services/slices/burgerSlice';
+import {
+  createOrder,
+  clearOrder
+} from '../../services/slices/orders/orderSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
@@ -19,7 +21,6 @@ export const BurgerConstructor: FC = () => {
     bun: bun,
     ingredients: ingredients
   };
-
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
     const ingredientsBurger = [

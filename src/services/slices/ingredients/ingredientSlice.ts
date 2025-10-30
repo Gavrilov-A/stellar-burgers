@@ -1,10 +1,10 @@
-import { getIngredientsApi } from '@api';
+import { getIngredientsApi } from '../../../utils/burger-api';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 
-type IngredientState = {
+export type IngredientState = {
   ingredients: TIngredient[];
   isLoading: boolean;
   error: string | null;

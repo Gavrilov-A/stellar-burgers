@@ -1,13 +1,17 @@
-import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '@api';
+import {
+  getOrderByNumberApi,
+  getOrdersApi,
+  orderBurgerApi
+} from '../../../utils/burger-api';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { TNewOrderResponse } from '../../utils/burger-api';
-import { AppDispatch } from '../store';
-import { clearIngredients } from './burgerSlice';
+import { TNewOrderResponse } from '../../../utils/burger-api';
+import { AppDispatch } from '../../store';
+import { clearIngredients } from '../burger-constructor/burgerSlice';
 
-type OrderState = {
+export type OrderState = {
   order: TOrder | null;
   orders: TOrder[];
   isLoading: boolean;
@@ -47,7 +51,7 @@ export const fetchOrderByNumber = createAsyncThunk<TOrder, number>(
   }
 );
 
-export const orderSlice = createSlice({
+const orderSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
@@ -73,7 +77,7 @@ export const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state) => {
         state.order = null;
         state.isLoading = false;
-        state.error = 'Error not found';
+        state.error = 'Error the order was not created';
       })
 
       // --- fetchOrders ---
@@ -91,7 +95,7 @@ export const orderSlice = createSlice({
       )
       .addCase(fetchOrders.rejected, (state) => {
         state.isLoading = false;
-        state.error = 'Error not found';
+        state.error = 'Error orders not found';
       })
 
       // --- fetchOrderByNumber ---
@@ -109,7 +113,7 @@ export const orderSlice = createSlice({
       )
       .addCase(fetchOrderByNumber.rejected, (state) => {
         state.isLoading = false;
-        state.error = 'Error not found';
+        state.error = 'Error order not found';
       });
   }
 });

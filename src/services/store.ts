@@ -1,3 +1,4 @@
+import { BurgerConstructor } from '@components';
 import {
   combineReducers,
   combineSlices,
@@ -11,21 +12,19 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import { ingredientSlice } from './slices/ingredientSlice';
-import { orderSlice } from './slices/orderSlice';
-import { burgerSlice } from './slices/burgerSlice';
-import { feedsSlice } from './slices/feedsSlice';
-import userSlice from './slices/userSlice';
+import ingredientSlice from './slices/ingredients/ingredientSlice';
+import orderSlice from './slices/orders/orderSlice';
+import burgerSlice from './slices/burger-constructor/burgerSlice';
+import feedsSlice from './slices/feed/feedsSlice';
+import userSlice from './slices/user/userSlice';
 
-const rootReducer = combineSlices({
+export const rootReducer = combineSlices({
   ingredients: ingredientSlice.reducer,
   orders: orderSlice.reducer,
   burger: burgerSlice.reducer,
   feeds: feedsSlice.reducer,
   user: userSlice.reducer
 });
-
-// Заменить на импорт настоящего редьюсера
 
 const store = configureStore({
   reducer: rootReducer,
